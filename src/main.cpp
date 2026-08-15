@@ -2,6 +2,7 @@
 #include <Geode/modify/LevelInfoLayer.hpp>
 #include <Geode/utils/web.hpp>
 
+#include <algorithm>
 #include <chrono>
 #include <optional>
 #include <unordered_map>
@@ -10,7 +11,7 @@ using namespace geode::prelude;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.0";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
@@ -56,7 +57,39 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         }
 
         m_fields->label->setString(fmt::format("Global #{}", placement).c_str());
+        positionPlacementLabel();
         m_fields->label->setVisible(true);
+    }
+
+    void positionPlacementLabel() {
+        auto label = m_fields->label;
+        if (!label || !m_difficultySprite || !m_difficultySprite->getParent()) {
+            return;
+        }
+
+        auto parent = m_difficultySprite->getParent();
+        auto const difficultySize = m_difficultySprite->getScaledContentSize();
+        auto lowestY = m_difficultySprite->getPositionY() -
+            difficultySize.height * m_difficultySprite->getAnchorPoint().y;
+
+        auto includeNodeBottom = [parent, &lowestY](CCNode* node) {
+            if (!node || node->getParent() != parent || !node->isVisible()) {
+                return;
+            }
+
+            auto const size = node->getScaledContentSize();
+            auto const bottom = node->getPositionY() - size.height * node->getAnchorPoint().y;
+            lowestY = std::min(lowestY, bottom);
+        };
+
+        includeNodeBottom(m_starsLabel);
+        includeNodeBottom(m_starsIcon);
+
+        auto const labelHeight = label->getScaledContentSize().height;
+        label->setPosition({
+            m_difficultySprite->getPositionX(),
+            lowestY - labelHeight / 2.f - 5.f,
+        });
     }
 
     void addPlacementLabel() {
@@ -65,19 +98,14 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         }
 
         auto parent = m_difficultySprite->getParent();
-        auto label = CCLabelBMFont::create("", "goldFont.fnt");
+        auto label = CCLabelBMFont::create("Global #0000", "goldFont.fnt");
         label->setID("global-demonlist-rank-label"_spr);
-        label->setScale(.42f);
+        label->setScale(.32f);
         label->setVisible(false);
-
-        auto const difficultySize = m_difficultySprite->getScaledContentSize();
-        label->setPosition({
-            m_difficultySprite->getPositionX(),
-            m_difficultySprite->getPositionY() - difficultySize.height / 2.f - 7.f,
-        });
 
         parent->addChild(label, m_difficultySprite->getZOrder() + 1);
         m_fields->label = label;
+        positionPlacementLabel();
     }
 
     void requestPlacement() {
