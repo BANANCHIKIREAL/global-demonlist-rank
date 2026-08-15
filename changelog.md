@@ -1,3 +1,9 @@
+# v1.1.6
+
+- Fixed the v1.1.5 regression that placed the Global Demonlist and AREDL rows on top of each other.
+- Reduced the compatibility lift so Global stays on a separate row without sitting as low as in v1.1.4.
+- Reduced the `GLOBAL` and `AREDL` source-tag sizes.
+
 # v1.1.5
 
 - Moved the Global Demonlist row closer to the IngameListMod AREDL row so it no longer sits too low.

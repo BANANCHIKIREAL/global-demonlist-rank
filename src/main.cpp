@@ -12,7 +12,7 @@ using namespace geode::prelude;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.5";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.6";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
@@ -116,7 +116,7 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
             source->setID("aredl-source-label"_spr);
             source->setAnchorPoint({ 0.f, .5f });
             source->setColor({ 255, 205, 70 });
-            source->setScale(.22f);
+            source->setScale(.15f);
             this->addChild(source, rank->getZOrder() + 2);
             m_fields->aredlSource = source;
         }
@@ -166,7 +166,7 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         auto const nodeHeight = node->getScaledContentSize().height;
         return {
             m_difficultySprite->getPositionX(),
-            lowestY - nodeHeight / 2.f - 5.f + (hasIngameListRank ? 16.f : 0.f),
+            lowestY - nodeHeight / 2.f - 5.f + (hasIngameListRank ? 7.f : 0.f),
         };
     }
 
@@ -263,7 +263,7 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         auto source = CCLabelBMFont::create("GLOBAL", "bigFont.fnt");
         source->setID("global-demonlist-source-label"_spr);
         source->setColor({ 90, 220, 255 });
-        source->setScale(.22f);
+        source->setScale(.15f);
 
         placement->addChild(trophy);
         placement->addChild(label);

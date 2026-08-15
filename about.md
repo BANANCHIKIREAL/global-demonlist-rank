@@ -1,4 +1,4 @@
-# <c-5DEBFF>G</c><c-68DEFF>l</c><c-75D0FF>o</c><c-84C2FF>b</c><c-95B3FF>a</c><c-A8A3FF>l</c> <c-B994FF>D</c><c-CA84F7>e</c><c-DB75EE>m</c><c-E967DF>o</c><c-F45FCB>n</c><c-FB61B3>l</c><c-FF6997>i</c><c-FF777C>s</c><c-FF8964>t</c> <c-FFA34F>R</c><c-FFBD49>a</c><c-FFD44C>n</c><c-FFEA5A>k</c> <cg>v1.1.5</c>
+# <c-5DEBFF>G</c><c-68DEFF>l</c><c-75D0FF>o</c><c-84C2FF>b</c><c-95B3FF>a</c><c-A8A3FF>l</c> <c-B994FF>D</c><c-CA84F7>e</c><c-DB75EE>m</c><c-E967DF>o</c><c-F45FCB>n</c><c-FB61B3>l</c><c-FF6997>i</c><c-FF777C>s</c><c-FF8964>t</c> <c-FFA34F>R</c><c-FFBD49>a</c><c-FFD44C>n</c><c-FFEA5A>k</c> <cg>v1.1.6</c>
 
 ### <c-66E6FF>See a level's current Global Demonlist placement directly in Geometry Dash.</c>
 
