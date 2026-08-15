@@ -1,4 +1,4 @@
-# <c-5DEBFF>G</c><c-68DEFF>l</c><c-75D0FF>o</c><c-84C2FF>b</c><c-95B3FF>a</c><c-A8A3FF>l</c> <c-B994FF>D</c><c-CA84F7>e</c><c-DB75EE>m</c><c-E967DF>o</c><c-F45FCB>n</c><c-FB61B3>l</c><c-FF6997>i</c><c-FF777C>s</c><c-FF8964>t</c> <c-FFA34F>R</c><c-FFBD49>a</c><c-FFD44C>n</c><c-FFEA5A>k</c> <cg>v1.1.6</c>
+# <c-5DEBFF>G</c><c-68DEFF>l</c><c-75D0FF>o</c><c-84C2FF>b</c><c-95B3FF>a</c><c-A8A3FF>l</c> <c-B994FF>D</c><c-CA84F7>e</c><c-DB75EE>m</c><c-E967DF>o</c><c-F45FCB>n</c><c-FB61B3>l</c><c-FF6997>i</c><c-FF777C>s</c><c-FF8964>t</c> <c-FFA34F>R</c><c-FFBD49>a</c><c-FFD44C>n</c><c-FFEA5A>k</c> <cg>v1.2.0</c>
 
 ### <c-66E6FF>See a level's current Global Demonlist placement directly in Geometry Dash.</c>
 
@@ -23,6 +23,12 @@ Higher placements receive more prestigious built-in Geometry Dash rank trophies,
 
 When <cp>IngameListMod</c> is installed, the Global Demonlist row automatically moves below its AREDL placement to prevent overlap.
 Compact <c-5ADCFF>GLOBAL</c> and <c-FFCD46>AREDL</c> tags make the two placements easy to identify.
+
+## <c-8DDCFF>MOD API</c>
+
+Other Geode mods can include `GlobalDemonlistRankAPI.hpp` to read cached placement states and listen for live updates.
+
+The API reports <cy>loading</c>, <cg>listed</c>, <c-FFD65A>unlisted</c>, and <cr>error</c> states. Listed results include the Global Demonlist placement number.
 
 ## <c-D79BFF>SETTINGS</c>
 

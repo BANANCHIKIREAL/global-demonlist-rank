@@ -1,3 +1,10 @@
+# v1.2.0
+
+- Fixed the Global row shifting left by centering only the trophy and placement number.
+- Added all visible level coin icons to the vertical layout calculation, preventing overlap when IngameListMod is not installed.
+- Added a public Geode event API with cached lookup and live `Loading`, `Listed`, `Unlisted`, and `Error` states.
+- Packaged `include/GlobalDemonlistRankAPI.hpp` for use by other mods.
+
 # v1.1.6
 
 - Fixed the v1.1.5 regression that placed the Global Demonlist and AREDL rows on top of each other.

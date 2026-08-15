@@ -8,16 +8,34 @@
 #include <optional>
 #include <unordered_map>
 
+#include "../include/GlobalDemonlistRankAPI.hpp"
+
 using namespace geode::prelude;
+using namespace bananchikireal::global_demonlist_rank;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.6";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.2.0";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
 // after restarting Geometry Dash.
 std::unordered_map<int, std::optional<int>> g_rankCache;
+std::unordered_map<int, PlacementResult> g_apiState;
+
+void publishPlacementState(
+    int levelID,
+    PlacementState state,
+    std::optional<int> placement = std::nullopt
+) {
+    auto result = PlacementResult {
+        .levelID = levelID,
+        .state = state,
+        .placement = placement,
+    };
+    g_apiState.insert_or_assign(levelID, result);
+    PlacementUpdateEvent().send(result);
+}
 
 std::optional<int> parsePlacement(web::WebResponse const& response) {
     auto json = response.json();
@@ -42,6 +60,16 @@ std::optional<int> parsePlacement(web::WebResponse const& response) {
     }
 
     return placement.unwrap();
+}
+
+$on_mod(Loaded) {
+    PlacementCacheEvent().listen([](int levelID, std::optional<PlacementResult>& result) {
+        if (auto cached = g_apiState.find(levelID); cached != g_apiState.end()) {
+            result = cached->second;
+            return ListenerResult::Stop;
+        }
+        return ListenerResult::Propagate;
+    }).leak();
 }
 }
 
@@ -87,13 +115,13 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         constexpr float gap = 3.f;
         constexpr float sourceGap = 4.f;
         auto const height = std::max({ trophySize.height, labelSize.height, sourceSize.height });
-        auto const width = trophySize.width + gap + labelSize.width + sourceGap + sourceSize.width;
+        auto const width = trophySize.width + gap + labelSize.width;
 
         placement->setContentSize({ width, height });
         trophy->setPosition({ trophySize.width / 2.f, height / 2.f });
         label->setPosition({ trophySize.width + gap + labelSize.width / 2.f, height / 2.f });
         source->setPosition({
-            trophySize.width + gap + labelSize.width + sourceGap + sourceSize.width / 2.f,
+            width + sourceGap + sourceSize.width / 2.f,
             height / 2.f,
         });
     }
@@ -153,6 +181,9 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
 
         includeNodeBottom(m_starsLabel);
         includeNodeBottom(m_starsIcon);
+        for (auto coin : CCArrayExt<CCSprite*>(m_coins)) {
+            includeNodeBottom(coin);
+        }
 
         // IngameListMod adds this label asynchronously to LevelInfoLayer. Its
         // trophy has no node ID, but the label reaches lower than the trophy,
@@ -301,11 +332,16 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
 
         if (auto cached = g_rankCache.find(levelID); cached != g_rankCache.end()) {
             if (cached->second.has_value()) {
+                publishPlacementState(levelID, PlacementState::Listed, *cached->second);
                 showPlacement(*cached->second);
+            }
+            else {
+                publishPlacementState(levelID, PlacementState::Unlisted);
             }
             return;
         }
 
+        publishPlacementState(levelID, PlacementState::Loading);
         showLoading();
 
         auto request = web::WebRequest();
@@ -324,10 +360,12 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
             if (response.code() == 404) {
                 hideLoading();
                 g_rankCache.insert_or_assign(levelID, std::nullopt);
+                publishPlacementState(levelID, PlacementState::Unlisted);
                 return;
             }
 
             if (!response.ok()) {
+                publishPlacementState(levelID, PlacementState::Error);
                 showNetworkError();
                 log::warn(
                     "Global Demonlist request for level {} failed with HTTP {}: {}",
@@ -340,12 +378,14 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
 
             auto placement = parsePlacement(response);
             if (!placement.has_value()) {
+                publishPlacementState(levelID, PlacementState::Error);
                 showNetworkError();
                 log::warn("Global Demonlist returned an unexpected response for level {}", levelID);
                 return;
             }
 
             g_rankCache.insert_or_assign(levelID, placement);
+            publishPlacementState(levelID, PlacementState::Listed, *placement);
             showPlacement(*placement);
         });
     }
