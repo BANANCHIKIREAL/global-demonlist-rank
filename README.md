@@ -10,7 +10,29 @@ Geode-мод для Geometry Dash 2.2081, который показывает а
 
 Во время запроса отображается индикатор загрузки. При ошибке сети появляется красный крестик, который плавно исчезает.
 
-Версия v1.1.6 совместима с IngameListMod: Global Demonlist располагается отдельной компактной строкой ниже его AREDL-позиции. Уменьшенные подписи `GLOBAL` и `AREDL` показывают источник каждого числа. Также сохранены исправление наложения на звёзды, толстая рамка с прозрачными углами и англоязычное градиентное описание внутри Geode.
+Версия v1.2.0 совместима с IngameListMod: Global Demonlist располагается отдельной компактной строкой ниже его AREDL-позиции. Подпись `GLOBAL` больше не влияет на центрирование кубка и числа, а без IngameListMod строка учитывает все видимые монеты уровня. Также сохранены толстая рамка с прозрачными углами и англоязычное градиентное описание внутри Geode.
+
+## API для других модов
+
+Публичный заголовок `include/GlobalDemonlistRankAPI.hpp` входит в пакет `.geode`. Он предоставляет:
+
+- `getCachedPlacement(levelID)` для чтения последнего состояния;
+- `PlacementUpdateEvent` для получения обновлений;
+- состояния `Loading`, `Listed`, `Unlisted` и `Error`;
+- номер позиции в `PlacementResult::placement` для состояния `Listed`.
+
+```cpp
+#include <GlobalDemonlistRankAPI.hpp>
+
+using namespace bananchikireal::global_demonlist_rank;
+
+auto listener = PlacementUpdateEvent().listen([](PlacementResult const& result) {
+    if (result.state == PlacementState::Listed && result.placement) {
+        geode::log::info("Level {} is Global #{}", result.levelID, *result.placement);
+    }
+    return geode::ListenerResult::Propagate;
+});
+```
 
 ## Сборка
 

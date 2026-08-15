@@ -5,17 +5,24 @@
     },
     "id": "bananchikireal.global-demonlist-rank",
     "name": "Global Demonlist Rank",
-    "version": "v1.1.6",
+    "version": "v1.2.0",
     "developer": "BANANCHIKIREAL",
     "description": "Shows a level's current Global Demonlist placement below its difficulty and star information.",
     "links": {
         "homepage": "https://demonlist.org/",
         "source": "https://github.com/BANANCHIKIREAL/global-demonlist-rank"
     },
+    "api": {
+        "include": [
+            "include/*.hpp"
+        ]
+    },
     "tags": [
         "interface",
         "utility",
-        "online"
+        "online",
+        "api",
+        "developer"
     ],
     "dependencies": {
         "geode.node-ids": ">=v1.23.3"
