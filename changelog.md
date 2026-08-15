@@ -1,3 +1,8 @@
+# v1.1.1
+
+- Replaced the in-Geode Russian description with English text supported by the default Geode font.
+- Increased the icon frame radius and stroke width so the rounded blue border remains visible at Geode thumbnail size.
+
 # v1.1.0
 
 - Fixed the Global Demonlist label overlapping the level's star count and star icon.
