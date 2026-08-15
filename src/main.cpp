@@ -12,7 +12,7 @@ using namespace geode::prelude;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.4";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.5";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
@@ -51,6 +51,8 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         CCNode* placement = nullptr;
         CCSprite* trophy = nullptr;
         CCLabelBMFont* label = nullptr;
+        CCLabelBMFont* source = nullptr;
+        CCLabelBMFont* aredlSource = nullptr;
         LoadingSpinner* loading = nullptr;
         CCLabelBMFont* error = nullptr;
         int levelID = 0;
@@ -74,19 +76,58 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         auto placement = m_fields->placement;
         auto trophy = m_fields->trophy;
         auto label = m_fields->label;
-        if (!placement || !trophy || !label) {
+        auto source = m_fields->source;
+        if (!placement || !trophy || !label || !source) {
             return;
         }
 
         auto const trophySize = trophy->getScaledContentSize();
         auto const labelSize = label->getScaledContentSize();
+        auto const sourceSize = source->getScaledContentSize();
         constexpr float gap = 3.f;
-        auto const height = std::max(trophySize.height, labelSize.height);
-        auto const width = trophySize.width + gap + labelSize.width;
+        constexpr float sourceGap = 4.f;
+        auto const height = std::max({ trophySize.height, labelSize.height, sourceSize.height });
+        auto const width = trophySize.width + gap + labelSize.width + sourceGap + sourceSize.width;
 
         placement->setContentSize({ width, height });
         trophy->setPosition({ trophySize.width / 2.f, height / 2.f });
         label->setPosition({ trophySize.width + gap + labelSize.width / 2.f, height / 2.f });
+        source->setPosition({
+            trophySize.width + gap + labelSize.width + sourceGap + sourceSize.width / 2.f,
+            height / 2.f,
+        });
+    }
+
+    CCNode* ingameListRank() {
+        return this->getChildByIDRecursive("adyagd.ingamelistmod/placement-label");
+    }
+
+    void updateAredlSource() {
+        auto rank = ingameListRank();
+        if (!rank || !rank->isVisible()) {
+            if (m_fields->aredlSource) {
+                m_fields->aredlSource->setVisible(false);
+            }
+            return;
+        }
+
+        if (!m_fields->aredlSource) {
+            auto source = CCLabelBMFont::create("AREDL", "bigFont.fnt");
+            source->setID("aredl-source-label"_spr);
+            source->setAnchorPoint({ 0.f, .5f });
+            source->setColor({ 255, 205, 70 });
+            source->setScale(.22f);
+            this->addChild(source, rank->getZOrder() + 2);
+            m_fields->aredlSource = source;
+        }
+
+        auto const rightCenter = rank->convertToWorldSpace({
+            rank->getContentSize().width,
+            rank->getContentSize().height / 2.f,
+        });
+        auto const position = this->convertToNodeSpace(rightCenter);
+        m_fields->aredlSource->setPosition({ position.x + 4.f, position.y });
+        m_fields->aredlSource->setVisible(true);
     }
 
     CCPoint statusPosition(CCNode* node) {
@@ -116,22 +157,21 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         // IngameListMod adds this label asynchronously to LevelInfoLayer. Its
         // trophy has no node ID, but the label reaches lower than the trophy,
         // so placing our row below the label keeps both complete rows apart.
-        auto ingameListRank = this->getChildByIDRecursive(
-            "adyagd.ingamelistmod/placement-label"
-        );
-        if (ingameListRank && ingameListRank->isVisible()) {
-            includeNodeBottom(ingameListRank);
-            lowestY -= 4.f;
+        auto rank = ingameListRank();
+        auto hasIngameListRank = rank && rank->isVisible();
+        if (hasIngameListRank) {
+            includeNodeBottom(rank);
         }
 
         auto const nodeHeight = node->getScaledContentSize().height;
         return {
             m_difficultySprite->getPositionX(),
-            lowestY - nodeHeight / 2.f - 5.f,
+            lowestY - nodeHeight / 2.f - 5.f + (hasIngameListRank ? 16.f : 0.f),
         };
     }
 
     void positionStatusNodes() {
+        updateAredlSource();
         if (m_fields->placement) {
             m_fields->placement->setPosition(statusPosition(m_fields->placement));
         }
@@ -220,8 +260,14 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         label->setID("global-demonlist-rank-label"_spr);
         label->setScale(.45f);
 
+        auto source = CCLabelBMFont::create("GLOBAL", "bigFont.fnt");
+        source->setID("global-demonlist-source-label"_spr);
+        source->setColor({ 90, 220, 255 });
+        source->setScale(.22f);
+
         placement->addChild(trophy);
         placement->addChild(label);
+        placement->addChild(source);
 
         auto loading = LoadingSpinner::create(10.f);
         loading->setID("global-demonlist-loading"_spr);
@@ -240,6 +286,7 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         m_fields->placement = placement;
         m_fields->trophy = trophy;
         m_fields->label = label;
+        m_fields->source = source;
         m_fields->loading = loading;
         m_fields->error = error;
         layoutPlacement();

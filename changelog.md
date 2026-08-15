@@ -1,3 +1,9 @@
+# v1.1.5
+
+- Moved the Global Demonlist row closer to the IngameListMod AREDL row so it no longer sits too low.
+- Added compact `GLOBAL` and `AREDL` source tags beside their respective placement numbers.
+- Kept the placement number on Geometry Dash's built-in gold font for texture-pack compatibility.
+
 # v1.1.4
 
 - Fixed compatibility with IngameListMod by detecting its actual AREDL placement label on the level info screen.
