@@ -1,0 +1,31 @@
+{
+    "geode": "5.9.0",
+    "gd": {
+        "win": "2.2081"
+    },
+    "id": "bananchikireal.global-demonlist-rank",
+    "name": "Global Demonlist Rank",
+    "version": "v1.0.0",
+    "developer": "BANANCHIKIREAL",
+    "description": "Shows a level's current Global Demonlist placement below its difficulty icon.",
+    "links": {
+        "homepage": "https://demonlist.org/",
+        "source": "https://github.com/BANANCHIKIREAL/global-demonlist-rank"
+    },
+    "tags": [
+        "interface",
+        "utility",
+        "online"
+    ],
+    "dependencies": {
+        "geode.node-ids": ">=v1.23.3"
+    },
+    "settings": {
+        "enabled": {
+            "type": "bool",
+            "name": "Show Global Rank",
+            "description": "Show the Global Demonlist placement below the level difficulty icon.",
+            "default": true
+        }
+    }
+}
