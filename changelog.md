@@ -1,3 +1,12 @@
+# v1.1.2
+
+- Made all four outer icon corners genuinely transparent.
+- Increased the blue frame thickness while preserving the supplied demon artwork.
+- Added a loading spinner while the Global Demonlist request is in progress.
+- Added a fading red cross when the request fails because the service or network is unavailable.
+- Replaced the plain `Global #...` text with a built-in Geometry Dash trophy and a large purple placement number.
+- Added automatic trophy tiers for #1, top 10, top 50, top 100, and progressively lower placement ranges.
+
 # v1.1.1
 
 - Replaced the in-Geode Russian description with English text supported by the default Geode font.
