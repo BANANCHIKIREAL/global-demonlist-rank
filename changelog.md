@@ -1,3 +1,11 @@
+# v1.1.0
+
+- Fixed the Global Demonlist label overlapping the level's star count and star icon.
+- Positioned the label below the complete difficulty and star information block.
+- Reduced the label size for better readability and compatibility with texture packs.
+- Added a rounded blue edge frame to the user-supplied mod icon without altering its central artwork.
+- Added a detailed in-Geode description with a cyan, purple, and gold gradient.
+
 # v1.0.0
 
 - Added Global Demonlist placement below the level difficulty icon.

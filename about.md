@@ -1,9 +1,31 @@
-# Global Demonlist Rank
+# <c-5DEBFF>G</c><c-68DEFF>l</c><c-75D0FF>o</c><c-84C2FF>b</c><c-95B3FF>a</c><c-A8A3FF>l</c> <c-B994FF>D</c><c-CA84F7>e</c><c-DB75EE>m</c><c-E967DF>o</c><c-F45FCB>n</c><c-FB61B3>l</c><c-FF6997>i</c><c-FF777C>s</c><c-FF8964>t</c> <c-FFA34F>R</c><c-FFBD49>a</c><c-FFD44C>n</c><c-FFEA5A>k</c> <cg>v1.1.0</c>
 
-Shows the current Global Demonlist placement directly below the difficulty icon on the level information screen.
+### <c-66E6FF>Актуальное место уровня в Global Demonlist — прямо в Geometry Dash.</c>
 
-The mod uses the public read-only Global Demonlist API. Requests are asynchronous and use the Geometry Dash level ID. Listed levels display `Global #<placement>`; unlisted levels are left unchanged.
+---
 
-Placements are cached for the current game session to avoid repeated requests when reopening the same level. Restarting Geometry Dash refreshes the session cache.
+## <c-5DEBFF>ЧТО ДЕЛАЕТ МОД</c>
 
-Data source: [demonlist.org](https://demonlist.org/)
+Когда открывается страница классического уровня, мод ищет его по Geometry Dash ID через публичный API [demonlist.org](https://demonlist.org/).
+
+- <c-FFD65A>**Уровень найден:**</c> под сложностью появляется `Global #<место>`.
+- <c-74E8FF>**Уровня нет в списке:**</c> интерфейс остаётся без изменений.
+- <c-C59BFF>**Нет соединения:**</c> страница уровня продолжает работать без ошибок и ожидания.
+
+## <c-8DDCFF>БЫСТРО И АККУРАТНО</c>
+
+Запрос выполняется <cg>асинхронно</c>, поэтому игра не зависает. Полученные позиции кэшируются до перезапуска Geometry Dash, чтобы один уровень не запрашивался повторно.
+
+Надпись размещается <c-FFD65A>ниже строки со звёздами</c>, не перекрывая число звёзд и их значок.
+
+## <c-D79BFF>НАСТРОЙКИ</c>
+
+В настройках мода можно полностью отключить отображение позиции с помощью переключателя <cy>Show Global Rank</c>.
+
+---
+
+<c-AEDBFF>Источник позиций:</c> [Global Demonlist](https://demonlist.org/)
+
+<c-C9B3FF>API:</c> [документация Global Demonlist](https://demonlist.org/api-docs)
+
+<c-FFD65A>Разработчик:</c> **BANANCHIKIREAL**
