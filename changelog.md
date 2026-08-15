@@ -1,3 +1,9 @@
+# v1.1.4
+
+- Fixed compatibility with IngameListMod by detecting its actual AREDL placement label on the level info screen.
+- Places the Global Demonlist trophy and number below the IngameListMod row, including after its asynchronous response arrives.
+- Changed the placement number to Geometry Dash's built-in gold font and removed the forced purple tint for texture-pack compatibility.
+
 # v1.1.3
 
 - Added dynamic layout compatibility with Integrated Demonlist v1.7.13.
