@@ -12,7 +12,7 @@ using namespace geode::prelude;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.3";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.4";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
@@ -113,11 +113,14 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         includeNodeBottom(m_starsLabel);
         includeNodeBottom(m_starsIcon);
 
-        auto integratedRank = this->getChildByIDRecursive(
-            "hiimjustin000.integrated_demonlist/level-rank-label"
+        // IngameListMod adds this label asynchronously to LevelInfoLayer. Its
+        // trophy has no node ID, but the label reaches lower than the trophy,
+        // so placing our row below the label keeps both complete rows apart.
+        auto ingameListRank = this->getChildByIDRecursive(
+            "adyagd.ingamelistmod/placement-label"
         );
-        if (integratedRank && integratedRank->isVisible()) {
-            includeNodeBottom(integratedRank);
+        if (ingameListRank && ingameListRank->isVisible()) {
+            includeNodeBottom(ingameListRank);
             lowestY -= 4.f;
         }
 
@@ -213,9 +216,8 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         trophy->setID("global-demonlist-trophy"_spr);
         trophy->setScale(.55f);
 
-        auto label = CCLabelBMFont::create("0000", "bigFont.fnt");
+        auto label = CCLabelBMFont::create("0000", "goldFont.fnt");
         label->setID("global-demonlist-rank-label"_spr);
-        label->setColor({ 194, 105, 255 });
         label->setScale(.45f);
 
         placement->addChild(trophy);
