@@ -11,7 +11,7 @@ using namespace geode::prelude;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.1";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
