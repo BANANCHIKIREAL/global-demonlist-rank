@@ -12,7 +12,7 @@ using namespace geode::prelude;
 
 namespace {
 constexpr char const* API_URL = "https://api.demonlist.org/level/classic/get";
-constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.2";
+constexpr char const* USER_AGENT = "BANANCHIKIREAL-GlobalDemonlistRank/1.1.3";
 
 // A null rank means that the API confirmed this level is not on the list.
 // The cache lives only for the current game session, so placements are refreshed
@@ -100,17 +100,26 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
             difficultySize.height * m_difficultySprite->getAnchorPoint().y;
 
         auto includeNodeBottom = [parent, &lowestY](CCNode* sibling) {
-            if (!sibling || sibling->getParent() != parent || !sibling->isVisible()) {
+            if (!sibling || !sibling->isVisible()) {
                 return;
             }
 
-            auto const size = sibling->getScaledContentSize();
-            auto const bottom = sibling->getPositionY() - size.height * sibling->getAnchorPoint().y;
-            lowestY = std::min(lowestY, bottom);
+            auto const localBottom = CCPoint { sibling->getContentSize().width / 2.f, 0.f };
+            auto const worldBottom = sibling->convertToWorldSpace(localBottom);
+            auto const bottomInParent = parent->convertToNodeSpace(worldBottom);
+            lowestY = std::min(lowestY, bottomInParent.y);
         };
 
         includeNodeBottom(m_starsLabel);
         includeNodeBottom(m_starsIcon);
+
+        auto integratedRank = this->getChildByIDRecursive(
+            "hiimjustin000.integrated_demonlist/level-rank-label"
+        );
+        if (integratedRank && integratedRank->isVisible()) {
+            includeNodeBottom(integratedRank);
+            lowestY -= 4.f;
+        }
 
         auto const nodeHeight = node->getScaledContentSize().height;
         return {
@@ -129,6 +138,10 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         if (m_fields->error) {
             m_fields->error->setPosition(statusPosition(m_fields->error));
         }
+    }
+
+    void refreshCompatibilityLayout(float) {
+        positionStatusNodes();
     }
 
     void showLoading() {
@@ -308,6 +321,10 @@ class $modify(GlobalDemonlistRankLevelInfoLayer, LevelInfoLayer) {
         }
 
         addStatusNodes();
+        schedule(
+            schedule_selector(GlobalDemonlistRankLevelInfoLayer::refreshCompatibilityLayout),
+            .25f
+        );
         requestPlacement();
         return true;
     }

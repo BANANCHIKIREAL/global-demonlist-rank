@@ -1,3 +1,9 @@
+# v1.1.3
+
+- Added dynamic layout compatibility with Integrated Demonlist v1.7.13.
+- Detects the Integrated Demonlist rank label even when its API response arrives later.
+- Places the Global Demonlist trophy and number on a separate row below the AREDL placement.
+
 # v1.1.2
 
 - Made all four outer icon corners genuinely transparent.
