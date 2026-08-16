@@ -1,3 +1,9 @@
+# v1.2.1
+
+- Fixed Global and IngameListMod AREDL ranks overlapping when reopening a level whose AREDL placement was already cached.
+- Added compatibility with IngameListMod v1.2.6 cached labels, which do not receive its usual node ID.
+- Removed the `GLOBAL` and `AREDL` text tags, leaving the trophy and placement number centered.
+
 # v1.2.0
 
 - Fixed the Global row shifting left by centering only the trophy and placement number.
